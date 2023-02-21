@@ -1,7 +1,7 @@
 section .data
     msg1 db 'accept five 64 bit numbers  ',10,13
     l1 equ $-msg1
-    msg2 db 'displaying five 64 bit numbers',10,13
+    msg2 db 'displayed five 64 bit numbers',10,13
     l2 equ $-msg2
     
 section .bss
@@ -32,6 +32,7 @@ section .text
         dec byte[counter]
         JNZ loop1
         
+        ;display message 2
         mov rax,1                     
         mov rdi,1       
         mov rsi,msg2
@@ -63,6 +64,7 @@ section .text
 ;equ replaces the the code by that block
 ;bss block section size --> that does dynamic input thats not initialised
 
+;input must be 16 numbers   eg 1231234567891479 
 ;codes to run the file are
 ;save file as abc.asm
 ;open the location and open folder in terminal where file is saved\

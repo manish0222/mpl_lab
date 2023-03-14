@@ -81,7 +81,7 @@ section .text
 ;type command    nams -f elf64 asgn2.asm
 ;type ls     
 ;check asgn2.o file is created or not
-;type ld -o file asgn1.o
+;type ld -o file asgn2.o
 ;type ls
 ;check in green the file is created or not
 ;type ./file and run

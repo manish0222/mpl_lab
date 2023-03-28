@@ -79,7 +79,7 @@ skip1: mov [rdi],al
 ;open the location and open folder in terminal where file is saved
 ;type command    nasm -f elf64 asgn3.asm
 ;type ls     
-;check asgn2.o file is created or not
+;check asgn3.o file is created or not
 ;type ld -o file asgn1.o
 ;type ls
 ;check in green the file is created or not

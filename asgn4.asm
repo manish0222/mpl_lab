@@ -183,3 +183,19 @@ add30:  add dl,30h
         jnz cnt
         scall 1,1,answer,16
 ret
+
+; code at home/desktop/21226
+;10,13 represents next line    
+;equ replaces the the code by that block
+;bss block section size --> that does dynamic input thats not initialised
+
+;codes to run the file are
+;save file as asgn4.asm
+;open the location and open folder in terminal where file is saved
+;type command    nasm -f elf64 asgn4.asm
+;type ls     
+;check asgn3.o file is created or not
+;type ld -o file asgn4.o
+;type ls
+;check in green the file is created or not
+;type ./file and run

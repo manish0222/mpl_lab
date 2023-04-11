@@ -194,7 +194,7 @@ ret
 ;open the location and open folder in terminal where file is saved
 ;type command    nasm -f elf64 asgn4.asm
 ;type ls     
-;check asgn3.o file is created or not
+;check asgn4.o file is created or not
 ;type ld -o file asgn4.o
 ;type ls
 ;check in green the file is created or not

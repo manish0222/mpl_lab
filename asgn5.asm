@@ -86,12 +86,12 @@ ret
 ;bss block section size --> that does dynamic input thats not initialised
 
 ;codes to run the file are
-;save file as asgn3.asm
+;save file as asgn5.asm
 ;open the location and open folder in terminal where file is saved
-;type command    nasm -f elf64 asgn3.asm
+;type command    nasm -f elf64 asgn5.asm
 ;type ls     
-;check asgn2.o file is created or not
-;type ld -o file asgn1.o
+;check asgn5.o file is created or not
+;type ld -o file asgn5.o
 ;type ls
 ;check in green the file is created or not
 ;type ./file and run

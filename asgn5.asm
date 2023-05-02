@@ -10,8 +10,10 @@ syscall
 section .data
 msg1 db "Count of Positive numbers: ",
 len1 equ $-msg1
-msg2 db "  and Count of negative numbers:"
+msg2 db "Count of negative numbers:"
 len2 equ $-msg2
+msg3 db "",10,13,
+len3 equ $-msg3
 array db 10,12,-21,-12,-19,-34,41
 
 
@@ -53,11 +55,14 @@ print msg1,len1
 mov bh,[pcount]
 call disp
 
+print msg3,len3
 
 
 print msg2,len2
 mov bh,[ncount]
 call disp
+
+print msg3,len3
 
 mov rax,60
 mov rdi,00
@@ -91,7 +96,7 @@ ret
 ;type command    nasm -f elf64 asgn5.asm
 ;type ls     
 ;check asgn5.o file is created or not
-;type ld -o file asgn5.o
+;type ld -o file asgn1.o
 ;type ls
 ;check in green the file is created or not
 ;type ./file and run

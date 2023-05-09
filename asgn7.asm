@@ -118,3 +118,20 @@ next2:
     dec bp
     jnz up2
     ret
+    
+; code at home/desktop/21226
+;10,13 represents next line    
+;equ replaces the the code by that block
+;bss block section size --> that does dynamic input thats not initialised
+
+;input must be 16 numbers   eg 1231234567891479 
+;codes to run the file are
+;save file as abc.asm
+;open the location and open folder in terminal where file is saved\
+;type command    nams -f elf64 asgn7.asm
+;type ls     
+;check asgn1.o file is created or not
+;type ld -o file asgn7.o
+;type ls
+;check in green the file is created or not
+;type ./file and run

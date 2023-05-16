@@ -1,141 +1,160 @@
-%macro scall 4
-        mov rax,%1
-        mov rdi,%2
-        mov rsi,%3
-        mov rdx,%4
-        syscall
-%endmacro
-
 section .data
-        menu db 10d,13d,"              MENU"
-             db 10d,"1. Hex to BCD"
-             db 10d,"2. BCD to Hex"
-             db 10d,"3. Exit"
-             db 10d,"Enter your choice: "
-        menulen equ $-menu
-        m1 db 10d,13d,"Enter Hex Number: "
-        l1 equ $-m1
-        m2 db 10d,13d,"Enter BCD Number: "
-        l2 equ $-m2
-        
-        m3 db 10d,13d,"Equivalent BCD Number: "
-        l3 equ $-m3
-        m4 db 10d,13d,"Equivalent Hex Number: "
-        l4 equ $-m4
-        
-section .bss
-        choice resb 1
-        num resb 16
-        answer resb 16
-        factor resb 16
-        
-section .code
-        global _start
-_start:
-        
-        scall 1,1,menu,menulen
-        scall 0,0,choice,2
-        
-        cmp byte[choice],'3'
-        jae exit
-        cmp byte[choice],'1'
-        je hex2bcd
-        cmp byte[choice],'2'
-        je bcd2hex
-        
-;**********Hex to BCD Conversion*************************      
-hex2bcd:
-        scall 1,1,m1,l1
-        scall 0,0,num,17
-        call asciihextohex
-        
-        mov rax,rbx
-	mov rbx,10
-	mov rdi,num+15
-loop3:
-	mov rdx,0
-	div rbx
-	add dl,30h
-	mov [rdi],dl
-	dec rdi
-	cmp rax,0
-	jne loop3
-	             
-        scall 1,1,m3,l3
-        scall 1,1,num,16          
-jmp _start
-
-;**********BCD to Hex Conversion*************************
-bcd2hex:        
-        scall 1,1,m2,l2
-        scall 0,0,num,17  
-                
-        mov rcx,16
-	mov rsi,num+15
-	mov rbx,0
-	mov qword[factor],1
-	
-loop4:
-	mov rax,0	
-	mov al,[rsi]
-        sub al,30h
-	mul qword[factor]
-	add rbx,rax
-	mov rax,10
-	mul qword[factor]
-	mov qword[factor],rax
-	dec rsi
-	loop loop4
-
-	scall 1,1,m4,l4
-	mov rax,rbx
-	call display            
-jmp _start     
+    menumsg db 10,10,'###### Menu for Code Conversion ######'
+        db 10,'1: Hex to BCD'
+        db 10,'2: BCD to Hex'
+        db 10,'3: Exit'
+        db 10,10,'Please Enter Choice::'
+    menumsg_len equ $-menumsg
    
-exit:   
-        mov rax,60
-        mov rdx,0
-        syscall
-        
-        
-;*********************PROCEDURES*************************
-	
-asciihextohex:
-	mov rsi,num
-	mov rcx,16
-	mov rbx,0
-	mov rax,0
-		
-loop1:	rol rbx,04
-	mov al,[rsi]
-	cmp al,39h
-	jbe skip1
-	sub al,07h
-skip1:	sub al,30h
-	
-	add rbx,rax
-	
-	inc rsi
-	dec rcx
-	jnz loop1	
-ret	
 
-display:
-        mov rsi,answer+15
-        mov rcx,16
+    hexinmsg db 10,10,'Please enter 4 digit hex number::'
+    hexinmsg_len equ $-hexinmsg
 
-loop2:	mov rdx,0
-        mov rbx,16
-        div rbx
-        cmp dl,09h
-        jbe skip2
-        
-        add dl,07h
-skip2:	add dl,30h
-        mov [rsi],dl
-        
-        dec rsi
-        dec rcx
-        jnz loop2
-        scall 1,1,answer,16       
-ret
+    bcdopmsg db 10,10,'BCD Equivalent::'
+    bcdopmsg_len equ $-bcdopmsg
+
+    bcdinmsg db 10,10,'Please enter 5 digit BCD number::'
+    bcdinmsg_len equ $-bcdinmsg
+
+    hexopmsg db 10,10,'Hex Equivalent::'
+    hexopmsg_len equ $-hexopmsg
+
+
+section .bss
+ numascii resb 06 ;common buffer for choice, hex and bcd input
+ outputbuff resb 02
+ dispbuff resb 08
+
+ %macro display 2
+  mov rax,01
+  mov rdi,01
+  mov rsi,%1
+  mov rdx,%2
+  syscall
+ %endmacro
+
+ %macro accept 2
+  mov rax,0
+  mov rdi,0
+  mov rsi,%1
+  mov rdx,%2
+  syscall
+ %endmacro
+
+
+section .text
+ global _start
+ _start:
+
+ menu: 
+  display menumsg,menumsg_len
+      accept numascii,2
+
+      cmp byte [numascii],'1'
+      je hex2bcd_proc
+
+
+
+      cmp byte [numascii],'2'
+      je bcd2hex_proc
+    
+
+      cmp byte [numascii],'3'
+      je exit
+      jmp _start
+
+ exit:
+      mov rax,60
+      mov rbx,0
+      syscall
+
+ hex2bcd_proc:
+  display hexinmsg,hexinmsg_len
+  accept numascii,5
+  call packnum
+  mov ax,bx   
+  mov rcx,0
+  mov bx,10 ;Base of Decimal No. system
+  
+ h2bup1: mov dx,0
+  div bx
+  push rdx
+  inc rcx
+  cmp ax,0
+  jne h2bup1
+  mov rdi,outputbuff
+
+ h2bup2: pop rdx
+  add dl,30h
+  mov [rdi],dl
+  inc rdi
+  loop h2bup2
+
+  display bcdopmsg,bcdopmsg_len
+  display outputbuff,5
+  jmp menu
+
+
+ bcd2hex_proc:
+  display bcdinmsg,bcdinmsg_len
+  accept numascii,6
+
+  display hexopmsg,hexopmsg_len
+
+  mov rsi,numascii
+  mov rcx,05
+  mov rax,0
+  mov ebx,0ah
+
+ b2hup1: mov rdx,0
+  mul ebx
+  mov dl,[rsi]
+  sub dl,30h
+  add rax,rdx
+  inc rsi
+  loop b2hup1
+  mov ebx,eax
+  call disp32_num
+  jmp menu
+
+
+ packnum:
+  mov bx,0
+  mov ecx,04
+  mov esi,numascii
+ up1:
+  rol bx,04
+  mov al,[esi]
+  cmp al,39h
+  jbe skip1
+  sub al,07h
+ skip1: 
+  sub al,30h
+  add bl,al
+  inc esi
+  loop up1
+  ret
+
+
+ disp32_num:
+  mov rdi,dispbuff ;point esi to buffer
+  mov rcx,08 ;load number of digits to display
+   
+ dispup1:
+  rol ebx,4 ;rotate number left by four bits
+  mov dl,bl ;move lower byte in dl
+  and dl,0fh ;mask upper digit of byte in dl
+  add dl,30h ;add 30h to calculate ASCII code
+  cmp dl,39h ;compare with 39h
+  jbe dispskip1 ;if less than 39h akip adding 07 more 
+  add dl,07h ;else add 07
+
+ dispskip1:
+  mov [rdi],dl ;store ASCII code in buffer
+  inc rdi ;point to next byte
+  loop dispup1 ;decrement the count of digits to display
+         ;if not zero jump to repeat
+
+  display dispbuff+3,5 ;Dispays only lower 5 digits as upper three are '0'
+
+  ret

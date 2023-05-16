@@ -158,3 +158,19 @@ section .text
   display dispbuff+3,5 ;Dispays only lower 5 digits as upper three are '0'
 
   ret
+  
+; code at home/desktop/21226
+;10,13 represents next line    
+;equ replaces the the code by that block
+;bss block section size --> that does dynamic input thats not initialised
+
+;codes to run the file are
+;save file as asgn3.asm
+;open the location and open folder in terminal where file is saved
+;type command    nasm -f elf64 asgn3.asm
+;type ls     
+;check asgn3.o file is created or not
+;type ld -o file asgn1.o
+;type ls
+;check in green the file is created or not
+;type ./file and run

@@ -116,3 +116,21 @@ convert: ;procedure to convert ascii to hex
         jnz contc
 
     ret
+
+
+; code at home/desktop/21226
+;10,13 represents next line    
+;equ replaces the the code by that block
+;bss block section size --> that does dynamic input thats not initialised
+
+;input must be two digit number   eg 03H,05H  etc
+;codes to run the file are
+;save file as asgn10.asm
+;open the location and open folder in terminal where file is saved\
+;type command    nams -f elf64 asgn10.asm
+;type ls     
+;check asgn1.o file is created or not
+;type ld -o file asgn10.o
+;type ls
+;check in green the file is created or not
+;type ./file and run
